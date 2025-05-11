@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity, Alert } from "react-native";
 import { getProducts, Product } from "../services/productService";
+import { Ionicons } from "@expo/vector-icons";
 import Navbar from "../components/Navbar";
 
 const HomeScreen = () => {
@@ -36,6 +37,7 @@ const HomeScreen = () => {
                     <Text style={styles.title}>{item.title}</Text>
                     <Text style={styles.price}> R$ {item.price}</Text>
                     <TouchableOpacity style={styles.button}>
+                        <Ionicons name="cart-outline" size={24} color="white"/>
                         <Text style={styles.buttonText}>Comprar</Text>
                     </TouchableOpacity>
                 </View>
@@ -68,10 +70,12 @@ const styles = StyleSheet.create({
         resizeMode: 'contain',
     },
     title: {
+        textAlign: 'center',
         fontWeight: 'bold',
         marginVertical: 8,
     },
     price: {
+        textAlign: 'center',
         color: 'green',
     },
     banner: {
@@ -79,6 +83,9 @@ const styles = StyleSheet.create({
         height: 200,
     },
     button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: "#B0864A",
         paddingVertical: 8,
         paddingHorizontal: 16,
@@ -88,5 +95,7 @@ const styles = StyleSheet.create({
     buttonText: {
         color: "#fff",
         fontWeight: "bold",
+        textAlign: 'center',
+        paddingLeft: 2,
     },
 });

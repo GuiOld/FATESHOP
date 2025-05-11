@@ -22,6 +22,7 @@ const LoginScreen = () =>{
         <View style={styles.screen}>
             <Navbar />
 
+          <View style={styles.formsLogin}>
             <Text style={styles.title}>Acesse a sua Conta</Text>
 
             <TextInput 
@@ -46,6 +47,7 @@ const LoginScreen = () =>{
             <TouchableOpacity style={styles.button} onPress={handleLogin}>
                 <Text style={styles.buttonText}>Entrar</Text>
             </TouchableOpacity>
+          
 
             <TouchableOpacity>
                 <Text style={styles.link}>Esqueceu a senha?</Text>
@@ -54,7 +56,7 @@ const LoginScreen = () =>{
             <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
                 <Text style={styles.createAccount}>Criar uma conta</Text>
             </TouchableOpacity>
-            
+            </View>
         </View>
     );
 }
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     screen: {
     flex: 1,
     backgroundColor: "#202135",
-    justifyContent: "space-between",
+    alignItems: 'center',
   },
   title: {
     color: '#fff',
@@ -104,6 +106,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  formsLogin: {
+     marginTop: 45,
+    width: '90%',
+  }
 });
 
 export default LoginScreen;
