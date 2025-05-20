@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
 import Navbar from "../components/Navbar";
 import { TextInput } from "react-native-gesture-handler";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/types";
+import api, { setAuthToken } from "../services/api";
 
 const LoginScreen = () =>{
     const [email, setEmail] = useState('');
@@ -21,9 +22,14 @@ const LoginScreen = () =>{
     return(
         <View style={styles.screen}>
             <Navbar />
-
+          
           <View style={styles.formsLogin}>
-            <Text style={styles.title}>Acesse a sua Conta</Text>
+            <Image
+              source={require("../../assets/img-login-cad.png")}
+              style={styles.image}
+              resizeMode="contain"
+            /> 
+            <Text style={styles.title}>ACESSE SUA CONTA</Text>
 
             <TextInput 
             style={styles.input}
@@ -54,7 +60,7 @@ const LoginScreen = () =>{
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
-                <Text style={styles.createAccount}>Criar uma conta</Text>
+                <Text style={styles.createAccount}>Ainda não tem uma conta? CADASTRE-SE</Text>
             </TouchableOpacity>
             </View>
         </View>
@@ -75,15 +81,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   input: {
-    backgroundColor: '#2d2e4a',
+    backgroundColor: '#F6EDEC',
     width: '100%',
     padding: 15,
     borderRadius: 8,
-    color: '#fff',
+    color: '#727272 ',
     marginBottom: 15,
   },
   button: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#696CA1',
     padding: 15,
     borderRadius: 8,
     width: '100%',
@@ -93,6 +99,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  image: {
+  width: '100%',
+  height: 200,
+  marginBottom: 20,
   },
   link: {
     color: '#ddd',
