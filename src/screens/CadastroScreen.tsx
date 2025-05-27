@@ -1,44 +1,41 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Text, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Image, Text, TextInput, Alert, Button } from "react-native";
 import Navbar from "../components/Navbar";
-import { useNavigation } from "@react-navigation/native";
-import api from "../services/api";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/types";
+import api from "../services/apiAuth";
+import { useRouter } from "expo-router";
 
 const CadastroScreen = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const router = useRouter();
 
-  const handleCadastro = async () => {
-    if (!nome || !email || !senha) {
-      Alert.alert("Preencha todos os campos");
-      return;
-    }
-
+  const cadastrar = async () => {
     try {
-      await api.post('/usuarios/registrar', { nome, email, senha });
-      Alert.alert("Cadastro realizado com sucesso!");
-      navigation.navigate("Login"); // Redirecionar para login após sucesso
-    } catch (err) {
-      Alert.alert("Erro no cadastro", "Tente novamente mais tarde.");
+      const response = await api.post('/usuarios/registrar', { nome, email, senha });
+
+      if (response.status === 201) {
+        Alert.alert('Sucesso', 'Cadastro realizado com sucesso!', [
+          { text: 'OK', onPress: () => router.replace('/') }
+        ]);
+      } else {
+        Alert.alert('Erro ao cadastrar', 'Tente novamente.');
+      }
+    } catch (err: any) {
+      const mensagem = err?.response?.data?.mensagem || 'Erro desconhecido';
+      Alert.alert('Erro no cadastro', mensagem);
     }
   };
 
   return (
     <View style={styles.screen}>
       <Navbar />
-
       <View style={styles.forms}>
-
         <Image
-            source={require("../../assets/img-login-cad.png")}
-            style={styles.image}
-            resizeMode="contain"
-        /> 
-
+          source={require("../../assets/img-login-cad.png")}
+          style={styles.image}
+          resizeMode="contain"
+        />
         <Text style={styles.title}>CRIAR CONTA</Text>
 
         <TextInput
@@ -48,7 +45,6 @@ const CadastroScreen = () => {
           onChangeText={setNome}
           value={nome}
         />
-
         <TextInput
           style={styles.input}
           placeholder="Email"
@@ -58,7 +54,6 @@ const CadastroScreen = () => {
           onChangeText={setEmail}
           value={email}
         />
-
         <TextInput
           style={styles.input}
           placeholder="Senha"
@@ -68,13 +63,7 @@ const CadastroScreen = () => {
           value={senha}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleCadastro}>
-          <Text style={styles.buttonText}>CADASTRAR</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-          <Text style={styles.link}>Já possui cadastro? ENTRAR</Text>
-        </TouchableOpacity>
+        <Button title="Cadastrar" onPress={cadastrar} />
       </View>
     </View>
   );
@@ -84,50 +73,32 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: "#202135",
-    alignItems: 'center',
+    alignItems: "center",
   },
   title: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 24,
     marginBottom: 30,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
   },
   input: {
-    backgroundColor: '#F6EDEC',
-    width: '100%',
+    backgroundColor: "#F6EDEC",
+    width: "100%",
     padding: 15,
     borderRadius: 8,
-    color: '#727272',
+    color: "#727272",
     marginBottom: 15,
   },
   image: {
-  width: '100%',
-  height: 200,
-  marginBottom: 20,
-    },
-  button: {
-    backgroundColor: '#696CA1',
-    padding: 15,
-    borderRadius: 8,
-    width: '100%',
-    alignItems: 'center',
+    width: "100%",
+    height: 200,
     marginBottom: 20,
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  link: {
-    color: '#ccc',
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-    fontSize: 16,
   },
   forms: {
     marginTop: 45,
-    width: '90%',
-  }
+    width: "90%",
+  },
 });
 
 export default CadastroScreen;

@@ -4,8 +4,4 @@ const api = axios.create({
     baseURL: "https://fakestoreapi.com",
 });
 
-export const setAuthToken = (token: string) => {
-  api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-};
-
 export default api;

@@ -1,74 +1,71 @@
 import React, { useState } from "react";
-import { View, StyleSheet, TouchableOpacity, Image, Text } from "react-native";
+import { View, StyleSheet, Image, Text, Alert, Button } from "react-native";
 import Navbar from "../components/Navbar";
 import { TextInput } from "react-native-gesture-handler";
-import { useNavigation } from "@react-navigation/native";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../types/types";
-import api, { setAuthToken } from "../services/api";
+import { useRouter } from 'expo-router';
+import api, { setAuthToken } from "../services/apiAuth";
 
-const LoginScreen = () =>{
-    const [email, setEmail] = useState('');
-    const [senha, setSenha] = useState('');
-    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+const LoginScreen = () => {
+  const [email, setEmail] = useState('');
+  const [senha, setSenha] = useState('');
+  const router = useRouter();
 
-    const handleLogin = () => {
-    console.log('Email:', email);
-    console.log('Senha:', senha);
-    // lógica real de login aqui
+  const entrar = async () => {
+    if (!email || !senha) {
+      Alert.alert('Erro', 'Preencha todos os campos');
+      return;
+    }
+
+    try {
+      const { data } = await api.post('/usuarios/login', { email, senha });
+      setAuthToken(data.token);
+      Alert.alert('Sucesso', 'Login realizado com sucesso!');
+      router.push('/contatos');
+    } catch (err: any) {
+      const mensagem = err?.response?.data?.mensagem || 'Email ou senha incorretos.';
+      Alert.alert('Erro ao entrar', mensagem);
+    }
   };
 
+  return (
+    <View style={styles.screen}>
+      <Navbar />
+      <View style={styles.formsLogin}>
+        <Image
+          source={require("../../assets/img-login-cad.png")}
+          style={styles.image}
+          resizeMode="contain"
+        />
+        <Text style={styles.title}>ACESSE SUA CONTA</Text>
 
-    return(
-        <View style={styles.screen}>
-            <Navbar />
-          
-          <View style={styles.formsLogin}>
-            <Image
-              source={require("../../assets/img-login-cad.png")}
-              style={styles.image}
-              resizeMode="contain"
-            /> 
-            <Text style={styles.title}>ACESSE SUA CONTA</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#aaa"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          onChangeText={setEmail}
+          value={email}
+        />
 
-            <TextInput 
-            style={styles.input}
-            placeholder="Email"
-            placeholderTextColor="#aaa"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            onChangeText={setEmail}
-            value={email}
-            />
+        <TextInput
+          style={styles.input}
+          placeholder="Senha"
+          placeholderTextColor="#aaa"
+          secureTextEntry
+          onChangeText={setSenha}
+          value={senha}
+        />
 
-            <TextInput
-            style={styles.input}
-            placeholder="Senha"
-            placeholderTextColor="#aaa"
-            secureTextEntry
-            onChangeText={setSenha}
-            value={senha}
-            />
-
-            <TouchableOpacity style={styles.button} onPress={handleLogin}>
-                <Text style={styles.buttonText}>Entrar</Text>
-            </TouchableOpacity>
-          
-
-            <TouchableOpacity>
-                <Text style={styles.link}>Esqueceu a senha?</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
-                <Text style={styles.createAccount}>Ainda não tem uma conta? CADASTRE-SE</Text>
-            </TouchableOpacity>
-            </View>
-        </View>
-    );
-}
+        <Button title="Entrar" onPress={entrar} />
+        <Button title="Cadastrar" onPress={() => router.push('/cadastro')} />
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    screen: {
+  screen: {
     flex: 1,
     backgroundColor: "#202135",
     alignItems: 'center',
@@ -85,40 +82,16 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 15,
     borderRadius: 8,
-    color: '#727272 ',
+    color: '#727272',
     marginBottom: 15,
   },
-  button: {
-    backgroundColor: '#696CA1',
-    padding: 15,
-    borderRadius: 8,
+  image: {
     width: '100%',
-    alignItems: 'center',
+    height: 200,
     marginBottom: 20,
   },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  image: {
-  width: '100%',
-  height: 200,
-  marginBottom: 20,
-  },
-  link: {
-    color: '#ddd',
-    textDecorationLine: 'underline',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
-  createAccount: {
-    color: '#ccc',
-    textDecorationLine: 'underline',
-    fontSize: 16,
-    textAlign: 'center',
-  },
   formsLogin: {
-     marginTop: 45,
+    marginTop: 45,
     width: '90%',
   }
 });
