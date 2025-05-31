@@ -2,13 +2,15 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TextInput, Alert, Button } from "react-native";
 import Navbar from "../components/Navbar";
 import api from "../services/apiAuth";
-import { useRouter } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/types";
 
 const CadastroScreen = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const router = useRouter();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const cadastrar = async () => {
     try {
@@ -16,7 +18,7 @@ const CadastroScreen = () => {
 
       if (response.status === 201) {
         Alert.alert('Sucesso', 'Cadastro realizado com sucesso!', [
-          { text: 'OK', onPress: () => router.replace('/') }
+          { text: 'OK', onPress: () => navigation.navigate("Login") }
         ]);
       } else {
         Alert.alert('Erro ao cadastrar', 'Tente novamente.');

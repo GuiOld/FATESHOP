@@ -4,11 +4,14 @@ import Navbar from "../components/Navbar";
 import { TextInput } from "react-native-gesture-handler";
 import { useRouter } from 'expo-router';
 import api, { setAuthToken } from "../services/apiAuth";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/types";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
-  const router = useRouter();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const entrar = async () => {
     if (!email || !senha) {
@@ -20,7 +23,7 @@ const LoginScreen = () => {
       const { data } = await api.post('/usuarios/login', { email, senha });
       setAuthToken(data.token);
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
-      router.push('/contatos');
+      navigation.navigate("Home");
     } catch (err: any) {
       const mensagem = err?.response?.data?.mensagem || 'Email ou senha incorretos.';
       Alert.alert('Erro ao entrar', mensagem);
@@ -58,7 +61,7 @@ const LoginScreen = () => {
         />
 
         <Button title="Entrar" onPress={entrar} />
-        <Button title="Cadastrar" onPress={() => router.push('/cadastro')} />
+        <Button title="Cadastrar" onPress={() => navigation.navigate("Cadastro")} />
       </View>
     </View>
   );
