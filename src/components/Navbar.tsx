@@ -33,7 +33,7 @@ const Navbar = () => {
           <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
             <Text style={styles.link}>CADASTRE-SE</Text>
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate("User")}>
             <Ionicons name="person" size={24} color="white" />
           </TouchableOpacity>
         </View>
