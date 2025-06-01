@@ -9,7 +9,7 @@ import { RootStackParamList } from "../types/types";
 const CadastroScreen = () => {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
-  const [senha, setSenha] = useState('');
+  const [senha, setSenha] = useState(''); 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const cadastrar = async () => {

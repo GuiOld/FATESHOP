@@ -22,22 +22,8 @@ const Navbar = () => {
           <Text style={styles.logo}>FATESHOP</Text>
         </TouchableOpacity>
 
-        {/* Search Bar */}
-        <View style={styles.searchContainer}>
-          <Feather name="search" size={20} color="#555" style={styles.searchIcon} />
-          <TextInput
-            placeholder="Busque por peças, acessórios..."
-            placeholderTextColor="#555"
-            style={styles.searchInput}
-          />
-        </View>
-
         {/* Right Icons */}
         <View style={styles.rightSection}>
-          <TouchableOpacity>
-            <Ionicons name="cart-outline" size={24} color="white" />
-          </TouchableOpacity>
-
           <TouchableOpacity onPress={() => navigation.navigate("Login")}>
             <Text style={styles.link}>ENTRE</Text>
           </TouchableOpacity>
@@ -47,7 +33,24 @@ const Navbar = () => {
           <TouchableOpacity onPress={() => navigation.navigate("Cadastro")}>
             <Text style={styles.link}>CADASTRE-SE</Text>
           </TouchableOpacity>
+          <TouchableOpacity>
+            <Ionicons name="person" size={24} color="white" />
+          </TouchableOpacity>
         </View>
+      </View>
+      <View style={styles.navContentwo}>
+        {/* Search Bar */}
+        <View style={styles.searchContainer}>
+          <Feather name="search" size={20} color="#555" style={styles.searchIcon} />
+          <TextInput
+            placeholder="Busque por peças, acessórios..."
+            placeholderTextColor="#555"
+            style={styles.searchInput}
+          />
+        </View>
+        <TouchableOpacity>
+            <Ionicons name="cart-outline" size={24} color="white" />
+          </TouchableOpacity>
       </View>
     </View>
   );
@@ -64,6 +67,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   navContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    marginBottom: 15,
+  },
+  navContentwo: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
