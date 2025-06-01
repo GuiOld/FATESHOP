@@ -1,5 +1,6 @@
 import axios from "axios";
 
+
 const apiAuth = axios.create({
   baseURL: "https://api-authentic.onrender.com",
 });
