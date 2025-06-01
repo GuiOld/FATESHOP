@@ -1,4 +1,4 @@
- import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -19,6 +19,21 @@ const UserScreen = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+
+  useEffect(() => {
+    const carregarDados = async () => {
+      try {
+        const response = await api.get("/usuarios/dados");
+        const { nome, email } = response.data;
+        setNome(nome);
+        setEmail(email);
+      } catch (error) {
+        Alert.alert("Erro", "Não foi possível carregar os dados do usuário");
+      }
+    };
+
+    carregarDados();
+  }, []);
 
   const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
