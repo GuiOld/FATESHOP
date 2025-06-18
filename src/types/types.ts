@@ -3,4 +3,5 @@ export type RootStackParamList = {
   Login: undefined;
   Cadastro: undefined;
   User: undefined;
+  Cart: undefined;
 };

@@ -1,13 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import { View, Text, Image, FlatList, StyleSheet, Dimensions, TouchableOpacity, Alert } from "react-native";
 import { getProducts, Product } from "../services/productService";
 import { Ionicons } from "@expo/vector-icons";
 import Navbar from "../components/Navbar";
+
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../types/types";
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useCart } from "../contexts/CartContext";
+
 
 const { width, height } = Dimensions.get("window");
 
 const HomeScreen = () => {
     const [products, setProducts] = useState<Product[]>([]);
+    const { addToCart } = useCart();
+
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
     
     useEffect(() => {
         const fetch = async () => {
@@ -16,6 +28,17 @@ const HomeScreen = () => {
         };
         fetch();
     }, []);
+
+    const handleAddToCart = async (product: Product) => {
+        const token = await AsyncStorage.getItem("authToken");
+        if(!token){
+            Alert.alert("Você precisa estar logado", "Por Favor, faça login para adicionar ao carrinho.",
+                [{text:"OK", onPress: () => navigation.navigate("Login")}]
+            );
+            return;
+        }
+        addToCart(product);
+    }
 
     return (
         <View style={styles.screen}>
@@ -46,7 +69,7 @@ const HomeScreen = () => {
                             {item.title}
                         </Text>
                         <Text style={styles.price}> R$ {item.price}</Text>
-                        <TouchableOpacity style={styles.button}>
+                        <TouchableOpacity style={styles.button} onPress={() => handleAddToCart(item)}>
                             <Ionicons name="cart-outline" size={24} color="white"/>
                             <Text style={styles.buttonText}>Comprar</Text>
                         </TouchableOpacity>

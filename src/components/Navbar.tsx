@@ -48,7 +48,7 @@ const Navbar = () => {
             style={styles.searchInput}
           />
         </View>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate("Cart")}>
             <Ionicons name="cart-outline" size={24} color="white" />
           </TouchableOpacity>
       </View>

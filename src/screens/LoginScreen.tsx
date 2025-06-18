@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, Alert, Button } from "react-native";
 import Navbar from "../components/Navbar";
 import { TextInput } from "react-native-gesture-handler";
-import { useRouter } from 'expo-router';
 import api, { setAuthToken } from "../services/apiAuth";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +21,7 @@ const LoginScreen = () => {
 
     try {
       const { data } = await api.post('/usuarios/login', { email, senha });
+      await AsyncStorage.setItem("authToken", data.token);
       setAuthToken(data.token);
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
       navigation.navigate("Home");
