@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const apiAuth = axios.create({
-  baseURL: "https://api-authentic.onrender.com",
+  baseURL: "https://api-auth-8ixf.onrender.com",
 });
 
 // Função opcional para setar token de autenticação

@@ -1,29 +1,33 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TextInput,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
+import { View, StyleSheet, Image, Text, TextInput, Alert, TouchableOpacity } from "react-native";
 import Navbar from "../components/Navbar";
-import api from "../services/apiAuth";
-import { useNavigation } from "@react-navigation/native";
+import api, { setAuthToken } from "../services/apiAuth";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/types";
 import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useCallback } from "react";
 
 const UserScreen = () => {
   const [nome, setNome] = useState("");
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
 
-  useEffect(() => {
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+  useFocusEffect(
+  useCallback(() => {
     const carregarDados = async () => {
       try {
-        const response = await api.get("/usuarios/dados");
+        const token = await AsyncStorage.getItem("authToken");
+        if (!token) {
+          navigation.navigate("Login");
+          return;
+        }
+
+        setAuthToken(token);
+        const response = await api.get("/usuarios/me");
         const { nome, email } = response.data;
         setNome(nome);
         setEmail(email);
@@ -33,11 +37,15 @@ const UserScreen = () => {
     };
 
     carregarDados();
-  }, []);
+  }, [])
+);
 
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   const atualizarConta = async () => {
+    if(!nome || !email){
+      Alert.alert("Campos obrigatórios", "Preencha nome e email");
+      return;
+    }
     try {
       const response = await api.put("/usuarios/atualizar", { nome, email, senha });
 
@@ -57,6 +65,7 @@ const UserScreen = () => {
       const response = await api.delete("/usuarios/deletar");
 
       if (response.status === 200) {
+        await AsyncStorage.removeItem("authToken");
         Alert.alert("Conta deletada", "Sua conta foi excluída com sucesso!", [
           { text: "OK", onPress: () => navigation.navigate("Login") },
         ]);

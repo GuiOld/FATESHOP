@@ -10,8 +10,17 @@ export interface Product {
 }
 
 export const getProducts = async (): Promise<Product[]> => {
-    const men = await api.get("/products/category/men's clothing");
-    const women = await api.get("/products/category/women's clothing");
-    return [...men.data, ...women.data];
-}
+    const categories = [
+        "men's clothing",
+        "women's clothing"
+    ];
 
+    const promises = categories.map(category => api.get(`/products/category/${category}`));
+    const results = await Promise.all(promises);
+
+    // juntar todos os produtos num único array
+    const allProducts = results.flatMap(res => res.data);
+
+    // opcional: limitar a 30 produtos (se quiser)
+    return allProducts.slice(0, 30);
+}

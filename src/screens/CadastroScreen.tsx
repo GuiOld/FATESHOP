@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TextInput, Alert, Button } from "react-native";
+import { View, StyleSheet, Image, Text, TextInput, Alert, Button, TouchableOpacity } from "react-native";
 import Navbar from "../components/Navbar";
 import api from "../services/apiAuth";
 import { useNavigation } from "@react-navigation/native";
@@ -65,7 +65,10 @@ const CadastroScreen = () => {
           value={senha}
         />
 
-        <Button title="Cadastrar" onPress={cadastrar} />
+        <TouchableOpacity onPress={cadastrar} style={styles.btnEntrar}>
+          <Text style={styles.textButton}>CADASTRAR</Text>
+        </TouchableOpacity>
+        
       </View>
     </View>
   );
@@ -100,6 +103,19 @@ const styles = StyleSheet.create({
   forms: {
     marginTop: 45,
     width: "90%",
+  },
+  btnEntrar: {
+    alignItems:"center",
+  },
+  textButton: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+    backgroundColor: "rgb(176, 134, 74)",
+    width:"100%",
+    textAlign: "center",
+    padding: 10,
+    borderRadius: 25,
   },
 });
 
